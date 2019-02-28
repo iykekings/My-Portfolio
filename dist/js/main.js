@@ -79,57 +79,62 @@ const projects = [
 ];
 
 // Add to projects
+try {
+  const projects$ = document.querySelector('.projects');
+  projects.forEach(item => {
+    let item$ = document.createElement('div');
+    item$.classList.add('working-item');
+    // Image container
+    const imageCon = document.createElement('a');
+    imageCon.classList.add('img-con');
+    let image = document.createElement('img');
+    image.src = item.imgUrl;
+    image.alt = item.name;
+    imageCon.append(image);
 
-const projects$ = document.querySelector('.projects');
-projects.forEach(item => {
-  let item$ = document.createElement('div');
-  item$.classList.add('working-item');
-  // Image container
-  const imageCon = document.createElement('a');
-  imageCon.classList.add('img-con');
-  let image = document.createElement('img');
-  image.src = item.imgUrl;
-  image.alt = item.name;
-  imageCon.append(image);
+    // Buttons
+    let btnLight = document.createElement('a');
+    btnLight.classList.add('btn-light');
+    btnLight.href = item.url;
+    btnLight.innerHTML = `<i class="fas fa-eye"></i> ${item.name}`;
 
-  // Buttons
-  let btnLight = document.createElement('a');
-  btnLight.classList.add('btn-light');
-  btnLight.href = item.url;
-  btnLight.innerHTML = `<i class="fas fa-eye"></i> ${item.name}`;
+    let btnDark = document.createElement('a');
+    btnDark.classList.add('btn-dark');
+    if (item.private) {
+      btnDark.setAttribute('disabled', 'true');
+      btnDark.href = '#';
+    } else {
+      btnDark.href = item.github;
+    }
+    btnDark.innerHTML = `<i class="fab fa-github"></i> Github`;
 
-  let btnDark = document.createElement('a');
-  btnDark.classList.add('btn-dark');
-  if (item.private) {
-    btnDark.setAttribute('disabled', 'true');
-    btnDark.href = '#';
-  } else {
-    btnDark.href = item.github;
+    // Overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    overlay.innerHTML = `<p>${item.description}</p>`;
+
+    // Add Up
+    item$.append(imageCon, btnLight, btnDark, overlay);
+    projects$.append(item$);
+    addListeners();
+  });
+} catch (error) {
+
+}
+
+function addListeners() {
+    const images = document.querySelectorAll('.img-con > img');
+    images.forEach(img =>
+      img.addEventListener('mouseenter', () => {
+        img.parentElement.parentElement
+          .querySelector('.overlay')
+          .classList.toggle('active');
+      })
+    );
+    const allOverlay = document.querySelectorAll('.working-item .overlay');
+    allOverlay.forEach(ov =>
+      ov.addEventListener('mouseleave', () => {
+        ov.classList.toggle('active');
+      })
+    );
   }
-  btnDark.innerHTML = `<i class="fab fa-github"></i> Github`;
-
-  // Overlay
-  const overlay = document.createElement('div');
-  overlay.classList.add('overlay');
-  overlay.innerHTML = `<p>${item.description}</p>`;
-
-  // Add Up
-  item$.append(imageCon, btnLight, btnDark, overlay);
-  projects$.append(item$);
-
-  // Toggle overlay
-  const images = document.querySelectorAll('.img-con > img');
-  images.forEach(img =>
-    img.addEventListener('mouseenter', () => {
-      img.parentElement.parentElement
-        .querySelector('.overlay')
-        .classList.toggle('active');
-    })
-  );
-  const allOverlay = document.querySelectorAll('.working-item .overlay');
-  allOverlay.forEach(ov =>
-    ov.addEventListener('mouseleave', () => {
-      ov.classList.toggle('active');
-    })
-  );
-});
